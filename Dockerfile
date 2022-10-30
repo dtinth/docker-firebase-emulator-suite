@@ -1,21 +1,16 @@
-FROM node:gallium-alpine
+FROM node:18-alpine
 
-ENV FIREBASE_TOOLS_VERSION=10.9.2
-RUN yarn global add firebase-tools@${FIREBASE_TOOLS_VERSION} && \
-    yarn cache clean && \
-    firebase -V && \
-    mkdir $HOME/.cache
+# Install runtime dependencies
+RUN apk --no-cache add openjdk17-jre-headless bash curl nginx gettext sed grep
 
-RUN apk --no-cache add openjdk8-jre bash curl nginx gettext sed grep
-RUN firebase setup:emulators:database
-RUN firebase setup:emulators:ui
+# Install Firebase CLI
+RUN yarn add firebase-tools && yarn cache clean && yarn firebase --version
 
-RUN mkdir -p /firebase
+# Install Firebase emulators
+RUN for I in $(yarn firebase --help | grep 'setup:' | awk '{ print $1 }'); do yarn firebase "$I"; done
 
-COPY cache-static.sh /usr/bin/
-RUN cache-static.sh
+# Copy Firebase configuration files
+COPY ./project/ ./
 
-COPY serve.sh /usr/bin/
-COPY nginx.conf.template /etc/nginx/
-
-ENTRYPOINT "/usr/bin/serve.sh"
+# Set up command
+CMD yarn firebase emulators:start
