@@ -36,6 +36,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Load Firebase Tools version
+        run: |
+          echo "FIREBASE_TOOLS_VERSION=$(cat version.txt)" | tee -a $GITHUB_ENV
+
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
       - name: Install cosign
