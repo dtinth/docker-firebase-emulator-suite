@@ -10,7 +10,10 @@ RUN test -n "$FIREBASE_TOOLS_VERSION" && yarn add firebase-tools@$FIREBASE_TOOLS
 # Install Firebase emulators
 RUN for I in $(yarn firebase --help | grep 'setup:' | awk '{ print $1 }'); do yarn firebase "$I"; done
 
-# Copy Firebase configuration files
+# Set the working directory
+WORKDIR /project
+
+# Copy Firebase configuration files to the current working directory
 COPY ./project/ ./
 
 # Set up command
