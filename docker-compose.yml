@@ -1,6 +1,9 @@
 services:
   firebase:
-    build: .
+    build:
+      context: .
+      args:
+        - FIREBASE_TOOLS_VERSION
     ports:
       - 9099:9099
       - 8080:8080
