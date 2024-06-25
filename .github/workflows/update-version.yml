@@ -19,7 +19,7 @@ jobs:
       - name: Load latest Firebase Tools version
         run: |
           LATEST_VERSION=$(npx latest-version-cli firebase-tools)
-          echo "LATEST_VERSION=$(cat version.txt)" | tee -a $GITHUB_ENV
+          echo "LATEST_VERSION=$LATEST_VERSION" | tee -a $GITHUB_ENV
 
       - name: Update version
         if: ${{ env.LATEST_VERSION != env.FIREBASE_TOOLS_VERSION }}
