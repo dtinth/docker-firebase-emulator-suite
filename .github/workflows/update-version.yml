@@ -2,6 +2,8 @@ name: Update version
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "58 0 * * 2"
 
 jobs:
   build:
