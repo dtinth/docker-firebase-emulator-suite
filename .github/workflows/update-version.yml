@@ -1,0 +1,29 @@
+name: Update version
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ssh-key: ${{ secrets.DEPLOY_KEY }}
+
+      - name: Load current Firebase Tools version
+        run: |
+          echo "FIREBASE_TOOLS_VERSION=$(cat version.txt)" | tee -a $GITHUB_ENV
+
+      - name: Load latest Firebase Tools version
+        run: |
+          LATEST_VERSION=$(npx latest-version-cli firebase-tools)
+          echo "LATEST_VERSION=$(cat version.txt)" | tee -a $GITHUB_ENV
+
+      - name: Update version
+        if: ${{ env.LATEST_VERSION != env.FIREBASE_TOOLS_VERSION }}
+        run: |
+          echo "$LATEST_VERSION" > version.txt
+          git config --global user.name 'dtinth-bot'
+          git config --global user.email 'dtinth-bot@users.noreply.github.com'
