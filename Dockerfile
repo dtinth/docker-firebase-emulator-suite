@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM node:22-alpine
 
 # Install runtime dependencies
 RUN apk --no-cache add openjdk17-jre-headless bash curl nginx gettext sed grep
