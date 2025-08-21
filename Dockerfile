@@ -1,7 +1,10 @@
-FROM node:22-alpine
+FROM node:24-alpine
 
 # Install runtime dependencies
 RUN apk --no-cache add openjdk17-jre-headless bash curl nginx gettext sed grep
+
+# Set the working directory
+WORKDIR /project
 
 # Install Firebase CLI
 ARG FIREBASE_TOOLS_VERSION
@@ -9,9 +12,6 @@ RUN test -n "$FIREBASE_TOOLS_VERSION" && yarn add firebase-tools@$FIREBASE_TOOLS
 
 # Install Firebase emulators
 RUN for I in $(yarn firebase --help | grep 'setup:' | awk '{ print $1 }'); do yarn firebase "$I"; done
-
-# Set the working directory
-WORKDIR /project
 
 # Copy Firebase configuration files to the current working directory
 COPY ./project/ ./
